@@ -1,7 +1,7 @@
 # Click-and-Capture
 
 **Click-and-Capture** is an **AI-powered image captioning app** built with **Streamlit** and **BLIP (Bootstrapping Language-Image Pretraining)**.  
-Upload an image, and the app will automatically generate a descriptive caption for it.  
+Upload an image, and the app will automatically generate a descriptive caption for it or use the webcam and click on the "capture image and generate captions" button to receive the same. 
 
 ---
 
