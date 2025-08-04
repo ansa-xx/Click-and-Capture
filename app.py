@@ -12,6 +12,7 @@ st.write("AI-powered image captioning using BLIP and Streamlit.")
 
 option = st.radio("Choose input method:", ["Upload Image", "Use Webcam"])
 
+# Option 1: Upload an image
 if option == "Upload Image":
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
     if uploaded_file:
@@ -21,26 +22,25 @@ if option == "Upload Image":
             caption = generate_caption(image)
             st.success(f"**Caption:** {caption}")
 
+# Option 2: Use webcam
 elif option == "Use Webcam":
+    if "webcam_capture" not in st.session_state:
+        st.session_state.webcam_capture = False
+
     run = st.checkbox("Turn on Webcam")
-    frame_window = st.image([])
 
-    cap = cv2.VideoCapture(0)
-
-    while run:
+    if run:
+        cap = cv2.VideoCapture(0)
         success, frame = cap.read()
-        if not success:
-            st.error("Failed to access webcam.")
-            break
+        cap.release()
 
-        # Convert BGR to RGB
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame_window.image(frame_rgb)
+        if success:
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            st.image(frame_rgb, caption="Live Webcam Frame", channels="RGB")
 
-        if st.button("Capture and Generate Caption"):
-            image = Image.fromarray(frame_rgb)
-            caption = generate_caption(image)
-            st.success(f"**Caption:** {caption}")
-            break
-
-    cap.release()
+            if st.button("📸 Capture and Generate Caption"):
+                image = Image.fromarray(frame_rgb)
+                caption = generate_caption(image)
+                st.success(f"**Caption:** {caption}")
+        else:
+            st.error("Unable to access webcam.")
