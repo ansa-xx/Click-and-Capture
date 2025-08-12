@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+button {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+img {
+  margin-top: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
