@@ -62,6 +62,7 @@ uvicorn caption_app:app --host 0.0.0.0 --port 8000
 ```
 
 3. **Frontend setup**
+
 Open a new terminal:
 ```bash
 cd frontend
@@ -74,5 +75,4 @@ App will be live at: http://localhost:3000
 
 ## Notes
 - Ensure the backend is running before using the frontend.
-- CORS is enabled in development mode.
 - Webcam access will require permission in your browser.
