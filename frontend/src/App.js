@@ -6,20 +6,29 @@ import './App.css';
 function App() {
   const [caption, setCaption] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [inputMethod, setInputMethod] = useState("upload");
   const webcamRef = useRef(null);
+
+  const handleInputMethodChange = (method) => {
+    setInputMethod(method);
+    setCaption("");
+    setImagePreview(null);
+  };
 
   const captureImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (!imageSrc) return;
     const res = await fetch(imageSrc);
     const blob = await res.blob();
+    setImagePreview(imageSrc);
     sendImage(blob);
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setImagePreview(URL.createObjectURL(file));
+    const url = URL.createObjectURL(file);
+    setImagePreview(url);
     sendImage(file);
   };
 
@@ -40,27 +49,59 @@ function App() {
     <div className="App">
       <h1>📸 Click-and-Capture</h1>
 
-      <input type="file" accept="image" onChange={handleFileChange} />
-      <p>or</p>
+      <div className="method-toggle">
+        <label>
+          <input
+            type="radio"
+            name="method"
+            value="upload"
+            checked={inputMethod === "upload"}
+            onChange={() => handleInputMethodChange("upload")}
+          />
+          Upload Image
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="method"
+            value="webcam"
+            checked={inputMethod === "webcam"}
+            onChange={() => handleInputMethodChange("webcam")}
+          />
+          Use Webcam
+        </label>
+      </div>
 
-      <Webcam
-        audio={false}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        width={320}
-        height={240}
-      />
-      <button onClick={captureImage}>Capture Image and Generate Caption</button>
+      {inputMethod === "upload" && (
+        <div className="upload-section">
+          <input type="file" accept="image" onChange={handleFileChange} />
+        </div>
+      )}
+
+      {inputMethod === "webcam" && (
+        <div className="webcam-section">
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            width={320}
+            height={240}
+          />
+          <button className="capture-btn" onClick={captureImage}>
+            Capture Image and Generate Caption
+          </button>
+        </div>
+      )}
 
       {imagePreview && (
-        <div>
+        <div className="preview-section">
           <h3>🖼️ Preview:</h3>
-          <img src={imagePreview} alt="Preview" width="300" />
+          <img src={imagePreview} alt="Preview" />
         </div>
       )}
 
       {caption && (
-        <div>
+        <div className="caption-section">
           <h3>📝 Generated Caption:</h3>
           <p>{caption}</p>
         </div>
